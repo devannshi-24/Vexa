@@ -1,3 +1,4 @@
+import gentoken from "../config/gentoken.js"
 import User from "../models/user.model.js"
 import bcrypt from "bcryptjs"
 
@@ -17,7 +18,11 @@ export const signUp= async(req,res)=>{
 
         const hashedPassword=  await bcrypt.hash(password,10)
 
-        const user = new User.create({name,email, password:hashedPassword})
+        const user = await User.create({
+            name,
+            email,
+            password:hashedPassword
+        })
         const token = await gentoken(user._id)
         res.cookie("token",token,{
             httpOnly : true,
