@@ -6,7 +6,9 @@ import authRouter from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import userRouter from "./routes/user.routes.js";
+import geminiResponse from "./gemini.js";
 
+console.log("KEY:", process.env.GROQ_API_KEY);
 
 const app = express();
 app.use(cors({
@@ -25,7 +27,21 @@ app.use(cookieParser())
 app.use("/api/auth",authRouter)
 app.use("/api/user",userRouter)
 
+// app.get("/", async (req, res) => {
+//   try {
+//     const prompt = req.query.prompt;
 
+//     const data = await geminiResponse(prompt);
+
+//     res.json({
+//       reply: data,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       message: error.message,
+//     });
+//   }
+// });
 
 app.listen(port,()=>{
     console.log(`Server is running on port ${port}`);

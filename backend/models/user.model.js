@@ -20,7 +20,10 @@ const userSchema= new mongoose.Schema({
     },
     assistantImage:{
         type:String
-    }
+    },
+    history:[
+        {type:String}
+    ]
 
 
 },{timestamps:true})
