@@ -6,5 +6,6 @@ authRouter.post('/login',login)
 authRouter.post('/signup',signUp)
 authRouter.get('/logout',logout)
 
+
 export default authRouter
 
