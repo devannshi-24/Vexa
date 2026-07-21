@@ -1,15 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { userDataContext } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
-import getGeminiResponse from '../context/userContext'
-
 import axios from 'axios'
 import { RiMenu3Fill } from "react-icons/ri";
 import { ImCross } from "react-icons/im";
 import aiImg from '../assets/ai.gif'
 import userImg from '../assets/user.gif'
 function Home() {
-  const {userData,serverUrl,setUserData}=useContext(userDataContext)
+  const {userData,serverUrl,setUserData,getGeminiResponse}=useContext(userDataContext)
   const navigate=useNavigate()
   const [listening, setListening] = useState(false)
   const[userText, setUserText] = useState("")
@@ -46,6 +44,12 @@ function Home() {
 
   const speak = (text) => {
     const utterance = new SpeechSynthesisUtterance(text)
+    utterance.lang = 'hi-IN';
+    const voices =window.speechSynthesis.getVoices()
+    const hindiVoice = voices.find(v => v.lang === 'hi-IN');
+    if (hindiVoice) {
+      utterance.voice = hindiVoice;
+    }
     isSpeakingRef.current = true
     utterance.onend = () => {
       setAiText("")
@@ -63,23 +67,23 @@ function Home() {
     speak(response);
     if(type === 'google_search'){
       const query = encodeURIComponent(userInput)
-      window.open('https://www.google.com/search?q=${query}','_blank');
+      window.open(`https://www.google.com/search?q=${query}`,'_blank');
     }
     if(type === 'calculator_open'){
-      window.open('https://www.google.com/search?q=calculator','_blank');
+      window.open(`https://www.google.com/search?q=calculator`,'_blank');
     }
     if(type === 'instagram_open'){
-      window.open('https://www.instagram.com/','_blank');
+      window.open(`https://www.instagram.com/`,'_blank');
     }
     if(type === 'facebook_open'){
-      window.open('https://www.facebook.com/','_blank');
+      window.open(`https://www.facebook.com/`,'_blank');
     }
     if(type === 'weather_show'){
-      window.open('https://www.google.com/search?q=weather','_blank');
+      window.open(`https://www.google.com/search?q=weather`,'_blank');
     }
     if(type === 'youtube_search' || type === 'youtube_play'){
       const query = encodeURIComponent(userInput)
-      window.open('https://www.youtube.com/results?search_query=${query}','_blank');
+      window.open(`https://www.youtube.com/results?search_query=${query}`,'_blank');
     }
   }
   useEffect(() =>{
@@ -111,7 +115,6 @@ function Home() {
     
     recognition.onstart = () => {
       isRecognizingRef.current = true
-      console.log("Recognition onstart");
       setListening(true)
     }
     recognition.onend = () => {
@@ -119,10 +122,10 @@ function Home() {
       setListening(false)
       if(isMounted && !isSpeakingRef.current){
         setTimeout(() => {
-          if(isMounted && !isSpeakingRef.current ){
+          if(isMounted ){
             try{
               recognition.start()
-              console.log("Recognition restarted after end");
+              console.log("Recognition restarted ");
             }
             catch(error){
               if(error.name !== "InvalidStateError"){
@@ -157,7 +160,7 @@ function Home() {
     recognition.onresult = async (e) =>{
       const transcript = e.results[e.results.length - 1][0].transcript.trim()
       console.log(transcript)
-      if(transcript.toLowerCase().includes(userData.assistantName.toLowerCase())){
+      if(true){
         setAiText("")
         setUserText(transcript)
         recognition.stop()
@@ -198,15 +201,16 @@ function Home() {
       <h1 className='text-white text-[19px] font-semibold'>History</h1>
       <div className='w-full h-[400px] overflow-y-auto flex flex-col'></div>
       {userData.history?.map((his)=>(
-        <span className='text-gray-200 text-[18px] truncate'>
+        <div className='text-gray-200 text-[18px] truncate'>
           {his}
-        </span>
+        </div>
       ))}
 
 
 
       </div>
-      
+      <button className='min-w-[150px] h-[60px] mt-[30px] text-black font-semibold absolute hidden lg:block top-[20px] right-[20px]  bg-white rounded-full cursor-pointer text-[19px] ' onClick={handleLogout}>Log Out</button>
+      <button className='min-w-[150px] h-[60px] mt-[30px] text-black font-semibold  bg-white absolute top-[100px] right-[20px] rounded-full cursor-pointer text-[19px] px-[20px] py-[10px] hidden lg:block ' onClick={()=>navigate("/customize")}>Customize your Assistant</button>
       <div className='w-[300px] h-[400px] flex justify-center items-center overflow-hidden rounded-4xl shadow:lg'>
         <img src={userData?.assistantImage} alt="" className='h-full object-cover'/>
       </div>

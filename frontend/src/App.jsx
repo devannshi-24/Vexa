@@ -1,11 +1,10 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import React,{useContext} from 'react'
+import { Navigate,Route, Routes } from 'react-router-dom'
 import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
 import Customize from './pages/Customize'
 import {userDataContext} from './context/UserContext'
 import Home from './pages/Home'
-import {Navigate} from 'react-router-dom'
 import Customize2 from './pages/Customize2'
 
 function App (){

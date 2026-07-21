@@ -20,7 +20,7 @@ function SignIn() {
     setLoading(true);
     try{
         
-        let result = await axios.post(`${serverUrl}/api/auth/signin`,{
+        let result = await axios.post(`${serverUrl}/api/auth/login`,{
             email,password
         },{withCredentials:true})
         setUserData(result.data)
@@ -31,7 +31,7 @@ function SignIn() {
         console.log(error);
         setUserData(null)
         setLoading(false);
-        setErr(error.response.data.message)
+        setErr(error.response.data.message || "Something went wrong")
     }
   }
   return (
