@@ -21,18 +21,18 @@ export const getCurrentUser = async (req,res)=>{
 
 export const updateAssistant = async(req,res)=>{
     try{
-        const {assistantName,imageURL}=req.body
+        const {assistantName,imageUrl}=req.body
         let assistantImage;
         if(req.file){
             assistantImage= await uploadOnCloudinary(req.file.path)
         }
         else {
-            assistantImage= imageURL
+            assistantImage= imageUrl
         }
         const user= await User.findByIdAndUpdate(req.userId,{
         assistantName,
         assistantImage
-        },{neww:true}).select("-password")
+        },{new:true}).select("-password")
         return res.status(200).json({user})
     } catch (error) {
         return res.status(500).json({message:"update assistant error",error:error.message})
@@ -84,7 +84,7 @@ export const askToAssistant = async(req,res)=>{
                     response: `The current month is ${moment().format("MMMM")}`
                 })
             case 'general':
-            case 'google-search':
+            case 'google_search':
             case 'youtube_search':
             case 'youtube_play':
             case 'calculator_open':

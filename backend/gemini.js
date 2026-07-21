@@ -26,7 +26,7 @@ Instructions:
 
 Type meanings:
 - "general": For general queries that don't fit into the other categories and you know what to answer or factual information requests.
-- "google-search": When the user wants to perform a search on Google. The "userInput" should contain the search query.
+- "google_search": When the user wants to perform a search on Google. The "userInput" should contain the search query.
 - "youtube_search": When the user wants to search for videos on YouTube. The "userInput" should contain the search query.
 - "youtube_play": When the user wants to directly play a specific video on YouTube. The "userInput" should contain the name of the video or channel.
 - "get_time": When the user asks for the current time.
