@@ -4,8 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { RiMenu3Fill } from "react-icons/ri";
 import { ImCross } from "react-icons/im";
+import { BsMic, BsMicMute } from "react-icons/bs";
+import { motion, AnimatePresence } from 'framer-motion';
 import aiImg from '../assets/ai.gif'
 import userImg from '../assets/user.gif'
+
 function Home() {
   const {userData,serverUrl,setUserData,getGeminiResponse}=useContext(userDataContext)
   const navigate=useNavigate()
@@ -186,40 +189,152 @@ function Home() {
     }
 },[])
 
-
+  const isSpeaking = Boolean(aiText)
+  const statusLabel = isSpeaking ? "Speaking" : listening ? "Listening" : "Idle"
+  const statusColor = isSpeaking ? "from-cyan-400 to-blue-400" : listening ? "from-emerald-400 to-cyan-400" : "from-gray-500 to-gray-600"
 
   return (
-    <div className='w-full h-[100vh] bg-gradient-to-t from-[#140101] to-[#03037c] flex justify-center items-center flex-col gap=[15px] overflow-hidden'>
-      <RiMenu3Fill className='lg:hidden text-white absolute top-[20px] right-[20px] w-[25px] h-[25px]' onClick={()=> setHam(true)}/>
-      <div className={`absolute lg:hidden top-0 w-full h-full bg-[#0000003b] backdrop-blur-lg p-[20px] flex flex-col gap-[20px] items-start ${ham?"translate-x-0":"translate-x-full"} transition-transform`}>
+    <div className='w-full min-h-screen bg-[#05070d] text-white flex justify-center items-center flex-col relative overflow-hidden'>
+      <div className='absolute w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px] -top-40 -left-40 pointer-events-none'></div>
+      <div className='absolute w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] bottom-0 -right-40 pointer-events-none'></div>
+      <div className='absolute w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[100px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none'></div>
 
-       <ImCross className=' text-white absolute top-[20px] right-[20px] w-[25px] h-[25px]' onClick={()=> setHam(false)}/>
-       <button className='min-w-[150px] h-[60px] bg-white rounded-full cursor-pointer text-black font-semibold text-[19px]' onClick={handleLogout }>Log out</button>
-      <button className='min-w-[150px] h-[60px] bg-white rounded-full cursor-pointer text-black font-semibold text-[19px] px-[20px] py-[10px]' onClick={()=> navigate("/customize") }>Customize your Assistant</button>
-
-      <div className='w-full h-[2px] bg-gray-400'></div>
-      <h1 className='text-white text-[19px] font-semibold'>History</h1>
-      <div className='w-full h-[400px] overflow-y-auto flex flex-col'></div>
-      {userData.history?.map((his)=>(
-        <div className='text-gray-200 text-[18px] truncate'>
-          {his}
+      <div className='absolute top-0 left-0 w-full flex items-center justify-between px-[6%] py-6 z-20'>
+        <span className='font-semibold text-lg tracking-tight'>
+          Virtual <span className='bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent'>Assistant</span>
+        </span>
+         <div className='hidden lg:flex items-center gap-3'>
+          <button
+            onClick={() => navigate("/customize")}
+            className='text-sm font-medium px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-colors'
+          >
+            Customize Assistant
+          </button>
+          <button onClick={handleLogout} className='text-sm font-medium px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white hover:opacity-90 transition-opacity'> Log Out</button>
         </div>
-      ))}
-
-
-
+        <button aria-label="Open menu" onClick={() => setHam(true)} className='lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors'><RiMenu3Fill className='w-5 h-5 text-white'/></button>
       </div>
-      <button className='min-w-[150px] h-[60px] mt-[30px] text-black font-semibold absolute hidden lg:block top-[20px] right-[20px]  bg-white rounded-full cursor-pointer text-[19px] ' onClick={handleLogout}>Log Out</button>
-      <button className='min-w-[150px] h-[60px] mt-[30px] text-black font-semibold  bg-white absolute top-[100px] right-[20px] rounded-full cursor-pointer text-[19px] px-[20px] py-[10px] hidden lg:block ' onClick={()=>navigate("/customize")}>Customize your Assistant</button>
-      <div className='w-[300px] h-[400px] flex justify-center items-center overflow-hidden rounded-4xl shadow:lg'>
-        <img src={userData?.assistantImage} alt="" className='h-full object-cover'/>
-      </div>
-      <h1 className='text-white text-[18px] font-semibold'>I'm {userData?.assistantName}</h1>
-      {!aiText && <img src={userImg} alt="" className='w-[200px]' />}
-      {aiText && <img src={aiImg} alt="" className='w-[200px]' />}
-      <h1 className='text-white text-[18px] font-semibold text-wrap'>{userText?userText:aiText?aiText:null}</h1>
+
+      <AnimatePresence>
+        {ham && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className='lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30'
+            onClick={() => setHam(false)}
+          >
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 32 }}
+              onClick={(e) => e.stopPropagation()}
+              className='absolute right-0 top-0 h-full w-[80%] max-w-[340px] bg-white/[0.04] border-l border-white/10 backdrop-blur-xl p-6 flex flex-col gap-6'
+            >
+              <button
+                aria-label="Close menu"
+                onClick={() => setHam(false)}
+                className='self-end w-9 h-9 flex items-center justify-center rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors'
+              >
+                <ImCross className='w-4 h-4 text-white'/>
+              </button>
+ 
+              <div className='flex flex-col gap-3'>
+                <button
+                  onClick={handleLogout}
+                  className='w-full h-[52px] rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold text-[16px]'
+                >
+                  Log Out
+                </button>
+                <button
+                  onClick={() => navigate("/customize")}
+                  className='w-full h-[52px] rounded-full bg-white/5 border border-white/10 text-white font-semibold text-[16px] hover:bg-white/10 transition-colors'
+                >
+                  Customize your Assistant
+                </button>
+              </div>
+ 
+              <div className='w-full h-[1px] bg-white/10'></div>
+ 
+              <h2 className='text-gray-300 text-sm font-semibold tracking-wide uppercase'>History</h2>
+              <div className='flex-1 overflow-y-auto flex flex-col gap-2 pr-1'>
+                {userData.history?.length ? (
+                  userData.history.map((his, i) => (
+                    <div key={i} className='text-gray-300 text-sm bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 truncate'>
+                      {his}
+                    </div>
+                  ))
+                ) : (
+                  <p className='text-gray-500 text-sm'>No conversations yet.</p>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className='relative z-10 w-full max-w-[420px] mx-4 bg-white/[0.03] border border-white/10 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/40 flex flex-col items-center gap-6 px-8 py-10 mt-16'
+      >
+        {/* status pill */}
+        <div className='flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5'>
+          <span className={`w-2 h-2 rounded-full bg-gradient-to-r ${statusColor} ${listening || isSpeaking ? 'animate-pulse' : ''}`}></span>
+          <span className='text-xs text-gray-300 tracking-wide'>{statusLabel}</span>
+        </div>
+ 
+        {/* assistant avatar with animated glow ring */}
+        <div className='relative w-[180px] h-[180px] flex items-center justify-center'>
+          <motion.div
+            animate={{
+              opacity: listening || isSpeaking ? [0.4, 0.8, 0.4] : 0.25,
+              scale: listening || isSpeaking ? [1, 1.08, 1] : 1,
+            }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            className='absolute inset-0 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 blur-2xl'
+          ></motion.div>
+          <div className='relative w-[150px] h-[150px] rounded-full overflow-hidden border-2 border-white/10 shadow-2xl shadow-blue-500/20 bg-black/30'>
+            <img src={userData?.assistantImage} alt="Your assistant" className='w-full h-full object-cover'/>
+          </div>
+          <div className='absolute -bottom-1 -right-1 w-9 h-9 rounded-full bg-[#05070d] border border-white/10 flex items-center justify-center'>
+            {listening ? <BsMic className='w-4 h-4 text-cyan-300'/> : <BsMicMute className='w-4 h-4 text-gray-500'/>}
+          </div>
+        </div>
+ 
+        <h1 className='text-[22px] font-bold tracking-tight text-center'>
+          I'm <span className='bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent'>{userData?.assistantName}</span>
+        </h1>
+ 
+        {/* speaking / listening indicator image, softened into the theme */}
+        <div className='w-[120px] h-[120px] rounded-2xl overflow-hidden border border-white/10 bg-black/20 flex items-center justify-center'>
+          {!aiText && <img src={userImg} alt="" className='w-full h-full object-cover'/>}
+          {aiText && <img src={aiImg} alt="" className='w-full h-full object-cover'/>}
+        </div>
+ 
+        {/* live transcript */}
+        <div className='w-full min-h-[64px] bg-black/30 border border-white/5 rounded-2xl px-5 py-4 flex items-center justify-center text-center'>
+          <AnimatePresence mode="wait">
+            {(userText || aiText) ? (
+              <motion.p
+                key={userText || aiText}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.25 }}
+                className='text-gray-200 text-[15px] leading-relaxed'
+              >
+                {userText ? userText : aiText}
+              </motion.p>
+            ) : (
+              <p className='text-gray-500 text-sm'>Say something to get started...</p>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
     </div>
-  )
-}
+     
+      )}
 
 export default Home
