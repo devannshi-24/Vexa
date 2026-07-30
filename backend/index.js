@@ -12,7 +12,7 @@ console.log("KEY:", process.env.GROQ_API_KEY);
 
 const app = express();
 app.use(cors({
-    origin:"http://localhost:5173",
+    origin:["http://localhost:5173","https://vexa.vercel.app"],
     credentials:true
 }))
 
