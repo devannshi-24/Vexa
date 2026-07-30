@@ -8,7 +8,6 @@ import cors from "cors";
 import userRouter from "./routes/user.routes.js";
 import geminiResponse from "./gemini.js";
 
-console.log("KEY:", process.env.GROQ_API_KEY);
 
 const app = express();
 app.use(cors({
