@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import { userDataContext } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+axios.defaults.withCredentials = true;
 import { RiMenu3Fill } from "react-icons/ri";
 import { ImCross } from "react-icons/im";
 import { BsMic, BsMicMute } from "react-icons/bs";

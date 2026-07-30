@@ -3,9 +3,10 @@ import { IoEyeSharp } from "react-icons/io5";
 import { FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { userDataContext } from '../context/UserContext';
-import axios from 'axios';
 import robot1 from '../assets/robot1.jpeg'
 import { motion } from 'framer-motion';
+import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 function SignIn() {
   const [showPassword, setShowPassword] = React.useState(false);

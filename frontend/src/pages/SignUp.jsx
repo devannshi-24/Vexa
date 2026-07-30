@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { userDataContext } from '../context/UserContext';
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 function SignUp() {
   const [showPassword, setShowPassword] = React.useState(false);

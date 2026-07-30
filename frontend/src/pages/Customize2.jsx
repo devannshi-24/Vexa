@@ -4,6 +4,7 @@ import { MdKeyboardBackspace } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 function Customize2() {
     const {userData,backendImages,selectedImage,serverUrl,setUserData} = useContext(userDataContext)
