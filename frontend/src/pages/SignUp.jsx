@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react'
-import bg from '../assets/authbg.jpeg'
+import robot1 from '../assets/robot1.jpeg'
 import { IoEyeSharp } from "react-icons/io5";
 import { FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { userDataContext } from '../context/UserContext';
 import axios from 'axios';
 
@@ -39,23 +40,42 @@ function SignUp() {
     }
   }
   return (
-    <div className='w-full h-screen bg-contain bg-center bg-no-repeat bg-[#7da0d8] flex justify-center items-center' style={{backgroundImage:`url(${bg})`}} >
-    <form className='w-[90%] min-h-[450px] h-auto max-w-[500px] ... px-[20px] py-[30px]' onSubmit={handleSignUp}>
-        <h1 className='text-white text-[30px] font-semibold mb-[30px]'>Register to <span className='text-blue-400'>Virtual Assistant</span></h1>
-        <label className='text-white text-sm self-start ml-2'>Name</label>
-        <input type="text" placeholder="Enter your name" className='w-full h-[60px] outline-none border-2 border-white/40 bg-white/10 text-white placeholder-gray-300 px-[20px] py-[10px] rounded-full transition-all duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30' required onChange={(e) => setName(e.target.value)} onBlur={() => setNameTouched(true)} value={name}/>
-        <label className='text-white text-sm self-start ml-2'>Email</label>
-        <label className='text-white text-sm self-start ml-2'>Password</label>
-        <input type="email" placeholder="Email" className='w-full h-[60px] outline-none border-2 border-white/40 bg-white/10 text-white placeholder-gray-300 px-[20px] py-[10px] rounded-full transition-all duration-200' required onChange={(e) => setEmail(e.target.value)} onBlur={() => setEmailTouched(true)} value={email}/>
-        <div className='w-full h-[60px] border-2 border-white/40 bg-white/10 text-white rounded-full relative text-[18px] focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-400/30'>
-            <input type={showPassword ? "text" : "password"} placeholder='password' className='w-full h-full rounded-full outline-none bg-transparent placeholder-gray-300 px-[20px] py-[10px]' required onChange={(e) => setPassword(e.target.value)} onBlur={() => setPasswordTouched(true)} value={password}/>
-            <button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(!showPassword)} className='absolute top-[18px] right-[20px] focus:outline-none focus:ring-2 focus:ring-blue-400/50 rounded-full'>{showPassword ? <FaEyeSlash className='w-[25px] h-[25px] text-white'/> : <IoEyeSharp className='w-[25px] h-[25px] text-white'/>}</button>
+    <div className='w-full h-screen bg-[#05070d] text-white flex justify-center items-center relative overflow-hidden'>
+      <div className='absolute w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px] -top-40 -left-40 pointer-events-none'></div>
+      <div className='absolute w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] bottom-0 -right-40 pointer-events-none'></div>
+      <div className='relative z-10 w-full max-w-[1100px] flex items-center justify-between gap-10'>
+        <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className='hidden lg:flex flex-col items-start flex-1 relative'>
+          <div className='relative w-full max-w-[560px] aspect-[4/5]' style={{  maskImage: 'linear-gradient(to right, transparent 100%, black 75%), linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)',  maskComposite: 'intersect', WebkitMaskImage: 'linear-gradient(to right ,black 75%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)', WebkitMaskComposite: 'source-in' }}>
+            <img src={robot1} alt="Virtual Assistant robot" className='w-full h-full object-cover object-left mix-blend-screen'/>
+          </div>
+
+        </motion.div>
+
+    <motion.form initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease: "easeOut" }}
+       className='relative z-10 w- max-w-[440px] bg-white/[0.03] border border-white/10 backdrop-blur-md rounded-3xl shadow-2xl shadow-black/40 flex flex-col items-center gap-5 px-8 py-10'
+        onSubmit={handleSignUp}>
+        <h1 className='text-white text-[28px] font-bold tracking-tight mb-2 text-center'>Register to <span className='bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent'>Virtual Assistant</span></h1>
+        <div className='w-full flex flex-col gap-1'>
+          <label className='text-gray-400 text-sm ml-2'>Name</label>
+          <input type="text" placeholder="Enter your name" className='w-full h-[52px] outline-none border border-white/10 bg-white/5 text-white placeholder-gray-500 px-5 rounded-full transition-all duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30' required onChange={(e) => setName(e.target.value)} onBlur={() => setNameTouched(true)} value={name} />
+        </div>
+        <div className='w-full flex flex-col gap-1'>
+            <label className='text-gray-400 text-sm ml-2'>Email</label>
+            <input type="email" placeholder="Email" className='w-full h-[52px] outline-none border border-white/10 bg-white/5 text-white placeholder-gray-500 px-5 rounded-full transition-all duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/30' required onChange={(e) => setEmail(e.target.value)} onBlur={() => setEmailTouched(true)} value={email}/>
+        </div>
+         <div className='w-full flex flex-col gap-1'>
+          <label className='text-gray-400 text-sm ml-2'>Password</label>
+          <div className='w-full h-[52px] border border-white/10 bg-white/5 text-white rounded-full relative transition-all duration-200 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-400/30'>
+            <input type={showPassword ? "text" : "password"} placeholder='Password' className='w-full h-full rounded-full outline-none bg-transparent placeholder-gray-500 px-5' required onChange={(e) => setPassword(e.target.value)} onBlur={() => setPasswordTouched(true)} value={password}/>
+            <button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(!showPassword)} className='absolute top-[14px] right-[18px] text-gray-400 hover:text-white transition-colors focus:outline-none'>{showPassword ? <FaEyeSlash className='w-[20px] h-[20px]'/> : <IoEyeSharp className='w-[20px] h-[20px]'/>}</button>
+          </div>
         </div>
         {err.length >0 && (<div className='w-full bg-red-500/10 border border-red-500 text-red-400 text-sm rounded-lg px-4 py-2'> {err}</div>)}
-        <button className='min-w-[150px] h-[60px] bg-white rounded-full mt-[30px] text-black font-semibold text-[19px] hover:bg-gray-100 active:scale-95 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2' disabled = {loading}> {loading ? "Signing Up..." : "Sign Up"}
-        </button>
-        <p className='text-white text-[18px] cursor-pointer mb-[15px]' onClick={() => navigate("/signin")}>Already have an account ? <span className='text-blue-400'>Sign In</span></p>
-    </form>
+        <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} className='w-full max-w-[220px] h-[52px] bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full mt-2 text-white font-semibold text-[17px] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2' disabled={loading}>{loading ? "Signing Up..." : "Sign Up"}</motion.button>
+        <p className='text-gray-400 text-sm cursor-pointer' onClick={() => navigate("/signin")}>Already have an account ? <span className='text-blue-400 hover:text-blue-300'>Sign In</span></p>
+        
+    </motion.form>
+    </div>
     </div>
   )
 }
